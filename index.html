@@ -1,88 +1,23 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PBHH | RADIO</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #000; color: #fff; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .control-btn { transition: transform 0.2s; }
-        .control-btn:active { transform: scale(0.9); }
-    </style>
-</head>
-<body class="font-sans antialiased pb-24">
+<div class="max-w-md mx-auto flex justify-center items-center gap-6 my-8">
+    <button class="opacity-50 hover:opacity-100 transition">🔀</button>
+    <button onclick="prevTrack()" class="hover:text-red-500 transition">⏮</button>
+    
+    <button id="main-play-pause" onclick="togglePlay()" 
+            class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-all">
+        <span id="play-icon">▶</span>
+    </button>
+    
+    <button onclick="nextTrack()" class="hover:text-red-500 transition">⏭</button>
+    <button class="opacity-50 hover:opacity-100 transition">🔁</button>
+</div>
 
-    <div class="max-w-2xl mx-auto px-6 pt-12 pb-6">
-        <h1 class="text-4xl font-light text-[#ff2a2a] tracking-[0.1em]">PBHH RADIO</h1>
-    </div>
-
-    <div class="sticky top-0 z-50 bg-black p-4">
-        <div class="aspect-video w-full max-w-2xl mx-auto">
-            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8" allowfullscreen></iframe>
-        </div>
-        
-        <div class="max-w-2xl mx-auto flex justify-center items-center gap-8 mt-6">
-            <button class="text-zinc-500">🔀</button>
-            <button onclick="prevTrack()" class="text-white text-2xl">⏮</button>
-            <button id="main-play-pause" onclick="togglePlay()" class="bg-orange-500 w-16 h-16 rounded-full text-white text-2xl font-bold">⏸</button>
-            <button onclick="nextTrack()" class="text-white text-2xl">⏭</button>
-            <button class="text-zinc-500">🔁</button>
-        </div>
-    </div>
-
-    <div class="max-w-2xl mx-auto px-6 mt-8">
-        <div class="flex gap-8 mb-8 font-bold uppercase text-xs tracking-widest text-zinc-500">
-            <button onclick="switchTab(this, 'releases')" class="tab-btn active border-b-2 border-red-500 text-red-500">Releases</button>
-            <button onclick="switchTab(this, 'about')" class="tab-btn">About</button>
-            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
-        </div>
-
-        <div id="releases" class="tab-content active" id="library"></div>
-        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration of the Nine Frameworks.</div>
-    </div>
-
-    <script>
-        let currentIndex = 0;
-        const tracks = [
-            { "id": "pzr2eZtcWK8", "title": "Boo boo boo bop" },
-            { "id": "_r9U0mrvLHQ", "title": "Preach Pastor" },
-            { "id": "j26Pp_EsFuE", "title": "Polaris" }
-        ];
-
-        function loadTrack(index) {
-            currentIndex = index;
-            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[index].id + "?autoplay=1";
-        }
-
-        function nextTrack() {
-            currentIndex = (currentIndex + 1) % tracks.length;
-            loadTrack(currentIndex);
-        }
-
-        function prevTrack() {
-            currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-            loadTrack(currentIndex);
-        }
-
-        function switchTab(el, id) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active', 'border-b-2', 'border-red-500', 'text-red-500'); });
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active', 'border-b-2', 'border-red-500', 'text-red-500');
-        }
-
-        // Render List
-        const library = document.getElementById('releases');
-        tracks.forEach((track, index) => {
-            const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6 cursor-pointer hover:opacity-70";
-            div.onclick = () => loadTrack(index);
-            div.innerHTML = `<span class="text-sm font-medium">${track.title}</span><span class="text-xs text-zinc-600">PLAY</span>`;
-            library.appendChild(div);
-        });
-    </script>
-</body>
-</html>
+<script>
+    let isPlaying = false;
+    function togglePlay() {
+        const player = document.getElementById('main-player');
+        const icon = document.getElementById('play-icon');
+        // This is a visual toggle; YouTube iframe API is required for true control
+        isPlaying = !isPlaying;
+        icon.innerText = isPlaying ? "⏸" : "▶";
+    }
+</script>
