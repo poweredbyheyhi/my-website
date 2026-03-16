@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
         body { background-color: #000; color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .nav-active { border-bottom: 1px solid #ef4444; color: #ef4444; }
     </style>
 </head>
 <body class="pb-24">
@@ -25,14 +26,23 @@
         <div class="max-w-md mx-auto flex justify-center items-center gap-6 mt-6">
             <button class="opacity-50">🔀</button>
             <button onclick="changeTrack(-1)">⏮</button>
-            <button onclick="togglePlay()" class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center">▶</button>
+            <div class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center font-bold">▶</div>
             <button onclick="changeTrack(1)">⏭</button>
             <button class="opacity-50">🔁</button>
         </div>
     </div>
 
     <div class="max-w-2xl mx-auto px-6 mt-8">
-        <div id="library"></div>
+        <div class="flex gap-8 mb-8 uppercase text-[10px] tracking-widest text-zinc-500">
+            <button onclick="switchTab(event, 'releases')" class="nav-active">Releases</button>
+            <button onclick="switchTab(event, 'about')">About</button>
+            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
+        </div>
+
+        <div id="releases" class="tab-content active">
+            <div id="library"></div>
+        </div>
+        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration.</div>
     </div>
 
     <script>
@@ -54,9 +64,13 @@
             loadTrack(currentIndex);
         }
 
-        function togglePlay() { alert("Note: Due to browser security, auto-pausing external YouTube iframes requires a specific API setup. Clicking the video itself is the standard control."); }
+        function switchTab(evt, id) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('button').forEach(el => el.classList.remove('nav-active'));
+            document.getElementById(id).classList.add('active');
+            evt.currentTarget.classList.add('nav-active');
+        }
 
-        // Render List
         const library = document.getElementById('library');
         tracks.forEach((track, index) => {
             const div = document.createElement('div');
