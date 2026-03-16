@@ -8,39 +8,42 @@
     <style>
         body { background-color: #000; color: #fff; }
         .player-box { background: #0a0a0a; border: 1px solid #222; }
-        .tab-btn { color: #525252; transition: all 0.3s; }
-        .tab-btn.active { color: #ef4444; border-bottom: 2px solid #ef4444; }
-        .track-item:hover { background: #1a1a1a; }
+        .track-item:hover { background: #1a1a1a; cursor: pointer; }
     </style>
 </head>
 <body class="font-sans antialiased">
     <div class="max-w-2xl mx-auto px-6 py-12">
-        <div class="flex gap-8 mb-8 border-b border-white/5 pb-4">
-            <button class="tab-btn active font-bold uppercase text-xs tracking-widest">Radio</button>
-            <button class="tab-btn font-bold uppercase text-xs tracking-widest">Library</button>
-        </div>
-
+        <h1 class="text-2xl font-bold mb-8 tracking-widest text-red-500">PBHH RADIO</h1>
+        
         <div class="player-box p-1 rounded-2xl mb-8 aspect-video">
             <iframe id="main-player" class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/pzr2eZtcWK8" allowfullscreen></iframe>
         </div>
 
-        <div class="space-y-2">
-            <h3 class="text-xs font-bold text-zinc-500 uppercase mb-4">Latest Tracks</h3>
-            <button onclick="load('pzr2eZtcWK8')" class="track-item w-full p-4 rounded-xl text-left flex justify-between">
-                <span>Boo boo boo bop</span>
-                <span class="text-zinc-600 text-xs">03:16</span>
-            </button>
-            <button onclick="load('_r9U0mrvLHQ')" class="track-item w-full p-4 rounded-xl text-left flex justify-between">
-                <span>Preach Pastor</span>
-                <span class="text-zinc-600 text-xs">01:33</span>
-            </button>
-        </div>
+        <div id="library" class="space-y-2">
+            </div>
     </div>
 
     <script>
-        function load(id) {
-            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + id;
-        }
+        const tracks = [
+            { "id": "pzr2eZtcWK8", "title": "Boo boo boo bop" },
+            { "id": "_r9U0mrvLHQ", "title": "Preach Pastor" },
+            { "id": "j26Pp_EsFuE", "title": "Polaris" },
+            { "id": "CyGIjgb7DJY", "title": "Kendra’s Lala-Bye! 9" },
+            { "id": "Gkhu1P9lYG4", "title": "Chinatown" },
+            { "id": "AzptWfKgpwc", "title": "Monica’s Kids (Olive Branch)" },
+            { "id": "Q90ftOQeVOM", "title": "Weakened Cruise" },
+            { "id": "HTjxgmwCOqQ", "title": "Catoosh!" }
+            // Add more entries here as needed from your list
+        ];
+
+        const library = document.getElementById('library');
+        tracks.forEach(track => {
+            const btn = document.createElement('button');
+            btn.className = "track-item w-full p-4 rounded-xl text-left flex justify-between";
+            btn.onclick = () => document.getElementById('main-player').src = "https://www.youtube.com/embed/" + track.id;
+            btn.innerHTML = `<span>${track.title}</span><span class="text-zinc-600 text-xs">PLAY</span>`;
+            library.appendChild(btn);
+        });
     </script>
 </body>
 </html>
