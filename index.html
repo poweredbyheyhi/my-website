@@ -9,7 +9,7 @@
         body { background-color: #000; color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .nav-active { color: #ef4444; }
+        .nav-active { color: #ef4444; border-bottom: 1px solid #ef4444; }
     </style>
 </head>
 <body class="pb-24">
@@ -24,11 +24,11 @@
         </div>
         
         <div class="max-w-xs mx-auto flex justify-between items-center mt-8">
-            <button class="text-zinc-600">🔀</button>
-            <button onclick="prevTrack()" class="text-white text-xl">⏮</button>
-            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-2xl">❚❚</button>
-            <button onclick="nextTrack()" class="text-white text-xl">⏭</button>
-            <button class="text-zinc-600">🔁</button>
+            <button class="text-zinc-600 hover:text-white">🔀</button>
+            <button onclick="prevTrack()" class="text-white text-xl hover:text-red-500">⏮</button>
+            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 hover:text-white transition-colors">▶</button>
+            <button onclick="nextTrack()" class="text-white text-xl hover:text-red-500">⏭</button>
+            <button class="text-zinc-600 hover:text-white">🔁</button>
         </div>
     </div>
 
@@ -36,13 +36,13 @@
         <div class="flex gap-8 mb-8 uppercase text-[10px] tracking-widest text-zinc-500">
             <button onclick="switchTab(event, 'releases')" class="nav-active">Releases</button>
             <button onclick="switchTab(event, 'about')">About</button>
-            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
+            <a href="https://pbhhradio.com" class="text-red-500 hover:text-white">Launch App</a>
         </div>
 
         <div id="releases" class="tab-content active">
             <div id="library"></div>
         </div>
-        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration.</div>
+        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration of the Nine Frameworks.</div>
     </div>
 
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -52,21 +52,31 @@
         const tracks = [
             { id: "pzr2eZtcWK8", title: "Boo boo boo bop" },
             { id: "_r9U0mrvLHQ", title: "Preach Pastor" },
-            { id: "j26Pp_EsFuE", title: "Polaris" }
+            { id: "j26Pp_EsFuE", title: "Polaris" },
+            { id: "CyGIjgb7DJY", title: "Kendra’s Lala-Bye! 9" },
+            { id: "Gkhu1P9lYG4", title: "Chinatown" },
+            { id: "AzptWfKgpwc", title: "Monica’s Kids (Olive Branch)" },
+            { id: "Q90ftOQeVOM", title: "Weakened Cruise" },
+            { id: "HTjxgmwCOqQ", title: "Catoosh!" }
         ];
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 height: '100%', width: '100%',
                 videoId: tracks[0].id,
-                playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 }
+                playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 },
+                events: { 'onStateChange': onPlayerStateChange }
             });
+        }
+
+        function onPlayerStateChange(event) {
+            const playBtn = document.getElementById('playBtn');
+            playBtn.innerText = (event.data === YT.PlayerState.PLAYING) ? '❚❚' : '▶';
         }
 
         function togglePlay() {
             const state = player.getPlayerState();
-            if (state === 1) { player.pauseVideo(); document.getElementById('playBtn').innerText = '▶'; }
-            else { player.playVideo(); document.getElementById('playBtn').innerText = '❚❚'; }
+            (state === YT.PlayerState.PLAYING) ? player.pauseVideo() : player.playVideo();
         }
 
         function nextTrack() {
@@ -89,8 +99,8 @@
         const library = document.getElementById('library');
         tracks.forEach((track, index) => {
             const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer";
-            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
+            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700 transition-colors group";
+            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600 group-hover:text-red-500">Listen</span>`;
             div.onclick = () => { currentIndex = index; player.loadVideoById(track.id); };
             library.appendChild(div);
         });
