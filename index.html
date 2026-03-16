@@ -9,52 +9,50 @@
         body { background-color: #000; color: #fff; }
         .player-card { background: #0a0a0a; border: 1px solid #1f1f1f; }
         .glass-btn { background: #121212; border: 1px solid #222; }
-        .glass-btn:hover { border: 1px solid #ff2a2a; }
+        .tab-btn { color: #525252; transition: all 0.3s; }
+        .tab-btn.active { color: #fff; border-bottom: 2px solid #ef4444; }
     </style>
 </head>
 <body class="font-sans antialiased">
 
-    <div class="max-w-2xl mx-auto px-6 py-12">
-        <div class="flex gap-8 mb-12 border-b border-white/5 pb-6">
-            <button class="text-white font-bold border-b-2 border-red-500 pb-1">LIBRARY</button>
-            <button class="text-zinc-500 hover:text-white transition-colors">RADIO</button>
-            <button class="text-zinc-500 hover:text-white transition-colors">FRAMEWORKS</button>
+    <div class="max-w-xl mx-auto px-6 py-12">
+        <div class="flex gap-8 mb-12 border-b border-white/5 pb-6" id="tabs">
+            <button class="tab-btn active font-bold uppercase tracking-widest text-sm" onclick="switchTab(this)">Library</button>
+            <button class="tab-btn font-bold uppercase tracking-widest text-sm" onclick="switchTab(this)">Radio</button>
+            <button class="tab-btn font-bold uppercase tracking-widest text-sm" onclick="switchTab(this)">Frameworks</button>
         </div>
 
         <div class="player-card p-8 rounded-3xl mb-8 flex items-center gap-6">
-            <div class="w-20 h-20 bg-red-900 rounded-xl animate-pulse"></div>
+            <div id="play-btn" class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+                <span id="play-icon" class="text-2xl">▶</span>
+            </div>
             <div>
                 <p class="text-[10px] uppercase tracking-widest text-red-500 font-bold">Now Playing</p>
-                <h2 class="text-2xl font-medium">Divine Awareness</h2>
+                <h2 class="text-xl font-medium">Divine Awareness</h2>
                 <div class="w-64 h-1 bg-white/10 mt-4 rounded-full overflow-hidden">
-                    <div class="w-1/3 h-full bg-red-500"></div>
+                    <div id="progress" class="w-0 h-full bg-red-500 transition-all duration-1000"></div>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
-                <div class="text-xl mb-2">🪙</div>
-                <div class="font-bold text-sm">Coin</div>
-            </div>
-            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
-                <div class="text-xl mb-2">🪞</div>
-                <div class="font-bold text-sm">Mirror</div>
-            </div>
-            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
-                <div class="text-xl mb-2">🔺</div>
-                <div class="font-bold text-sm">Trinity</div>
-            </div>
-            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
-                <div class="text-xl mb-2">⚡</div>
-                <div class="font-bold text-sm">WATT</div>
-            </div>
+            <div class="glass-btn p-6 rounded-2xl hover:border-red-500 transition-all">🪙 <span class="ml-2 font-bold text-sm">Coin</span></div>
+            <div class="glass-btn p-6 rounded-2xl hover:border-red-500 transition-all">🪞 <span class="ml-2 font-bold text-sm">Mirror</span></div>
         </div>
-
-        <a href="https://a.co/d/7Xz6DHl" target="_blank" class="mt-8 block text-center py-4 rounded-xl border border-white/10 hover:border-red-500 transition-all font-bold text-sm">
-            READ THE DIVINE BOOK
-        </a>
     </div>
 
+    <script>
+        function switchTab(el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        let playing = false;
+        document.getElementById('play-btn').onclick = function() {
+            playing = !playing;
+            document.getElementById('play-icon').innerText = playing ? "⏸" : "▶";
+            document.getElementById('progress').style.width = playing ? "100%" : "0%";
+        };
+    </script>
 </body>
 </html>
