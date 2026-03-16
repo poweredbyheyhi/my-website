@@ -8,42 +8,38 @@
     <style>
         body { background-color: #000; color: #fff; }
         .player-box { background: #0a0a0a; border: 1px solid #222; }
-        .tab-btn { color: #525252; }
+        .tab-btn { color: #525252; transition: all 0.3s; }
         .tab-btn.active { color: #ef4444; border-bottom: 2px solid #ef4444; }
+        .track-item:hover { background: #1a1a1a; }
     </style>
 </head>
 <body class="font-sans antialiased">
-
-    <div class="max-w-xl mx-auto px-6 py-12">
-        <div class="flex gap-8 mb-8 border-b border-white/5 pb-4" id="tabs">
-            <button class="tab-btn active font-bold uppercase text-xs tracking-widest" onclick="switchTab(this)">Radio</button>
-            <button class="tab-btn font-bold uppercase text-xs tracking-widest" onclick="switchTab(this)">Library</button>
+    <div class="max-w-2xl mx-auto px-6 py-12">
+        <div class="flex gap-8 mb-8 border-b border-white/5 pb-4">
+            <button class="tab-btn active font-bold uppercase text-xs tracking-widest">Radio</button>
+            <button class="tab-btn font-bold uppercase text-xs tracking-widest">Library</button>
         </div>
 
-        <div class="player-box p-1 rounded-2xl mb-8 overflow-hidden aspect-video">
-            <iframe id="video-player" class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/YOUR_DEFAULT_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+        <div class="player-box p-1 rounded-2xl mb-8 aspect-video">
+            <iframe id="main-player" class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/pzr2eZtcWK8" allowfullscreen></iframe>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="loadVideo('VIDEO_ID_1')" class="bg-[#121212] p-4 rounded-xl text-left border border-[#222] hover:border-red-500 transition-all">
-                <div class="text-sm font-bold">Latest Broadcast</div>
-                <div class="text-[10px] text-zinc-500">Divine Awareness</div>
+        <div class="space-y-2">
+            <h3 class="text-xs font-bold text-zinc-500 uppercase mb-4">Latest Tracks</h3>
+            <button onclick="load('pzr2eZtcWK8')" class="track-item w-full p-4 rounded-xl text-left flex justify-between">
+                <span>Boo boo boo bop</span>
+                <span class="text-zinc-600 text-xs">03:16</span>
             </button>
-            <button onclick="loadVideo('VIDEO_ID_2')" class="bg-[#121212] p-4 rounded-xl text-left border border-[#222] hover:border-red-500 transition-all">
-                <div class="text-sm font-bold">Framework 01</div>
-                <div class="text-[10px] text-zinc-500">The Coin</div>
+            <button onclick="load('_r9U0mrvLHQ')" class="track-item w-full p-4 rounded-xl text-left flex justify-between">
+                <span>Preach Pastor</span>
+                <span class="text-zinc-600 text-xs">01:33</span>
             </button>
         </div>
     </div>
 
     <script>
-        function switchTab(el) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-
-        function loadVideo(id) {
-            document.getElementById('video-player').src = "https://www.youtube.com/embed/" + id;
+        function load(id) {
+            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + id;
         }
     </script>
 </body>
