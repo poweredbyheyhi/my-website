@@ -20,15 +20,15 @@
 
     <div class="sticky top-0 z-50 bg-black p-4">
         <div class="aspect-video w-full max-w-2xl mx-auto">
-            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8?autoplay=0" frameborder="0" allowfullscreen></iframe>
+            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8" frameborder="0" allowfullscreen></iframe>
         </div>
         
         <div class="max-w-xs mx-auto flex justify-between items-center mt-8 text-white">
-            <button id="shuffleBtn" onclick="toggleShuffle()" class="opacity-50 hover:opacity-100 transition">🔀</button>
+            <button class="opacity-50">🔀</button>
             <button onclick="changeTrack(-1)" class="hover:text-red-500 transition text-2xl">⏮</button>
-            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
+            <button class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
             <button onclick="changeTrack(1)" class="hover:text-red-500 transition text-2xl">⏭</button>
-            <button id="repeatBtn" onclick="toggleRepeat()" class="opacity-50 hover:opacity-100 transition">🔁</button>
+            <button class="opacity-50">🔁</button>
         </div>
     </div>
 
@@ -52,37 +52,10 @@
             { id: "j26Pp_EsFuE", title: "Polaris" }
         ];
         let currentIndex = 0;
-        let isShuffle = false;
-        let isRepeat = false;
 
         function changeTrack(dir) {
-            currentIndex = isShuffle ? Math.floor(Math.random() * tracks.length) : (currentIndex + dir + tracks.length) % tracks.length;
+            currentIndex = (currentIndex + dir + tracks.length) % tracks.length;
             document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[currentIndex].id + "?autoplay=1";
-            document.getElementById('playBtn').innerText = '❚❚';
-        }
-
-        function togglePlay() {
-            const player = document.getElementById('main-player');
-            const btn = document.getElementById('playBtn');
-            // Toggle logic for standard embeds
-            const src = player.src;
-            if(src.includes("autoplay=1")) {
-                player.src = src.replace("autoplay=1", "autoplay=0");
-                btn.innerText = '▶';
-            } else {
-                player.src = src.replace("autoplay=0", "autoplay=1");
-                btn.innerText = '❚❚';
-            }
-        }
-
-        function toggleShuffle() {
-            isShuffle = !isShuffle;
-            document.getElementById('shuffleBtn').style.opacity = isShuffle ? "1" : "0.5";
-        }
-
-        function toggleRepeat() {
-            isRepeat = !isRepeat;
-            document.getElementById('repeatBtn').style.opacity = isRepeat ? "1" : "0.5";
         }
 
         function switchTab(evt, id) {
