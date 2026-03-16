@@ -7,37 +7,32 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #000; color: #fff; }
-        .player-card { background: #0a0a0a; border: 1px solid #1f1f1f; }
-        .glass-btn { background: #121212; border: 1px solid #222; }
-        .tab-btn { color: #525252; transition: all 0.3s; }
-        .tab-btn.active { color: #fff; border-bottom: 2px solid #ef4444; }
+        .player-box { background: #0a0a0a; border: 1px solid #222; }
+        .tab-btn { color: #525252; }
+        .tab-btn.active { color: #ef4444; border-bottom: 2px solid #ef4444; }
     </style>
 </head>
 <body class="font-sans antialiased">
 
     <div class="max-w-xl mx-auto px-6 py-12">
-        <div class="flex gap-8 mb-12 border-b border-white/5 pb-6" id="tabs">
-            <button class="tab-btn active font-bold uppercase tracking-widest text-sm" onclick="switchTab(this)">Library</button>
-            <button class="tab-btn font-bold uppercase tracking-widest text-sm" onclick="switchTab(this)">Radio</button>
-            <button class="tab-btn font-bold uppercase tracking-widest text-sm" onclick="switchTab(this)">Frameworks</button>
+        <div class="flex gap-8 mb-8 border-b border-white/5 pb-4" id="tabs">
+            <button class="tab-btn active font-bold uppercase text-xs tracking-widest" onclick="switchTab(this)">Radio</button>
+            <button class="tab-btn font-bold uppercase text-xs tracking-widest" onclick="switchTab(this)">Library</button>
         </div>
 
-        <div class="player-card p-8 rounded-3xl mb-8 flex items-center gap-6">
-            <div id="play-btn" class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
-                <span id="play-icon" class="text-2xl">▶</span>
-            </div>
-            <div>
-                <p class="text-[10px] uppercase tracking-widest text-red-500 font-bold">Now Playing</p>
-                <h2 class="text-xl font-medium">Divine Awareness</h2>
-                <div class="w-64 h-1 bg-white/10 mt-4 rounded-full overflow-hidden">
-                    <div id="progress" class="w-0 h-full bg-red-500 transition-all duration-1000"></div>
-                </div>
-            </div>
+        <div class="player-box p-1 rounded-2xl mb-8 overflow-hidden aspect-video">
+            <iframe id="video-player" class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/YOUR_DEFAULT_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div class="glass-btn p-6 rounded-2xl hover:border-red-500 transition-all">🪙 <span class="ml-2 font-bold text-sm">Coin</span></div>
-            <div class="glass-btn p-6 rounded-2xl hover:border-red-500 transition-all">🪞 <span class="ml-2 font-bold text-sm">Mirror</span></div>
+            <button onclick="loadVideo('VIDEO_ID_1')" class="bg-[#121212] p-4 rounded-xl text-left border border-[#222] hover:border-red-500 transition-all">
+                <div class="text-sm font-bold">Latest Broadcast</div>
+                <div class="text-[10px] text-zinc-500">Divine Awareness</div>
+            </button>
+            <button onclick="loadVideo('VIDEO_ID_2')" class="bg-[#121212] p-4 rounded-xl text-left border border-[#222] hover:border-red-500 transition-all">
+                <div class="text-sm font-bold">Framework 01</div>
+                <div class="text-[10px] text-zinc-500">The Coin</div>
+            </button>
         </div>
     </div>
 
@@ -47,12 +42,9 @@
             el.classList.add('active');
         }
 
-        let playing = false;
-        document.getElementById('play-btn').onclick = function() {
-            playing = !playing;
-            document.getElementById('play-icon').innerText = playing ? "⏸" : "▶";
-            document.getElementById('progress').style.width = playing ? "100%" : "0%";
-        };
+        function loadVideo(id) {
+            document.getElementById('video-player').src = "https://www.youtube.com/embed/" + id;
+        }
     </script>
 </body>
 </html>
