@@ -9,7 +9,7 @@
         body { background-color: #000; color: #fff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .nav-active { border-bottom: 1px solid #ef4444; color: #ef4444; }
+        .nav-active { color: #ef4444; }
     </style>
 </head>
 <body class="pb-24">
@@ -20,15 +20,15 @@
 
     <div class="sticky top-0 z-50 bg-black p-4">
         <div class="aspect-video w-full max-w-2xl mx-auto">
-            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div id="player"></div>
         </div>
         
-        <div class="max-w-md mx-auto flex justify-center items-center gap-6 mt-6">
-            <button class="opacity-50">🔀</button>
-            <button onclick="changeTrack(-1)">⏮</button>
-            <div class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center font-bold">▶</div>
-            <button onclick="changeTrack(1)">⏭</button>
-            <button class="opacity-50">🔁</button>
+        <div class="max-w-xs mx-auto flex justify-between items-center mt-8">
+            <button class="text-zinc-600">🔀</button>
+            <button onclick="prevTrack()" class="text-white text-xl">⏮</button>
+            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-2xl">❚❚</button>
+            <button onclick="nextTrack()" class="text-white text-xl">⏭</button>
+            <button class="text-zinc-600">🔁</button>
         </div>
     </div>
 
@@ -45,23 +45,38 @@
         <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration.</div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
+        let player;
+        let currentIndex = 0;
         const tracks = [
             { id: "pzr2eZtcWK8", title: "Boo boo boo bop" },
             { id: "_r9U0mrvLHQ", title: "Preach Pastor" },
             { id: "j26Pp_EsFuE", title: "Polaris" }
         ];
-        
-        let currentIndex = 0;
 
-        function loadTrack(index) {
-            currentIndex = index;
-            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[index].id + "?autoplay=1";
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '100%', width: '100%',
+                videoId: tracks[0].id,
+                playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 }
+            });
         }
 
-        function changeTrack(direction) {
-            currentIndex = (currentIndex + direction + tracks.length) % tracks.length;
-            loadTrack(currentIndex);
+        function togglePlay() {
+            const state = player.getPlayerState();
+            if (state === 1) { player.pauseVideo(); document.getElementById('playBtn').innerText = '▶'; }
+            else { player.playVideo(); document.getElementById('playBtn').innerText = '❚❚'; }
+        }
+
+        function nextTrack() {
+            currentIndex = (currentIndex + 1) % tracks.length;
+            player.loadVideoById(tracks[currentIndex].id);
+        }
+
+        function prevTrack() {
+            currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+            player.loadVideoById(tracks[currentIndex].id);
         }
 
         function switchTab(evt, id) {
@@ -74,9 +89,9 @@
         const library = document.getElementById('library');
         tracks.forEach((track, index) => {
             const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700";
+            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer";
             div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
-            div.onclick = () => loadTrack(index);
+            div.onclick = () => { currentIndex = index; player.loadVideoById(track.id); };
             library.appendChild(div);
         });
     </script>
