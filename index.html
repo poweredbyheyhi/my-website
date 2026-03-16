@@ -23,12 +23,16 @@
             <div id="player"></div>
         </div>
         
-        <div class="max-w-xs mx-auto flex justify-between items-center mt-8">
-            <button class="text-zinc-600 hover:text-white">🔀</button>
-            <button onclick="prevTrack()" class="text-white text-xl hover:text-red-500">⏮</button>
-            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 hover:text-white transition-colors">▶</button>
-            <button onclick="nextTrack()" class="text-white text-xl hover:text-red-500">⏭</button>
-            <button class="text-zinc-600 hover:text-white">🔁</button>
+        <div class="max-w-xs mx-auto flex justify-between items-center mt-8 text-white">
+            <button id="shuffleBtn" onclick="toggleShuffle()" class="opacity-50 hover:opacity-100 transition">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            </button>
+            <button onclick="prevTrack()" class="hover:text-red-500 transition text-xl">⏮</button>
+            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
+            <button onclick="nextTrack()" class="hover:text-red-500 transition text-xl">⏭</button>
+            <button id="repeatBtn" onclick="toggleRepeat()" class="opacity-50 hover:opacity-100 transition">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4M21 6H9a5 5 0 000 10h2M7 22l-4-4 4-4M3 18h12a5 5 0 000-10h-2"/></svg>
+            </button>
         </div>
     </div>
 
@@ -49,6 +53,9 @@
     <script>
         let player;
         let currentIndex = 0;
+        let isShuffle = false;
+        let isRepeat = false;
+        
         const tracks = [
             { id: "pzr2eZtcWK8", title: "Boo boo boo bop" },
             { id: "_r9U0mrvLHQ", title: "Preach Pastor" },
@@ -72,6 +79,8 @@
         function onPlayerStateChange(event) {
             const playBtn = document.getElementById('playBtn');
             playBtn.innerText = (event.data === YT.PlayerState.PLAYING) ? '❚❚' : '▶';
+            if (event.data === YT.PlayerState.ENDED && isRepeat) player.playVideo();
+            else if (event.data === YT.PlayerState.ENDED) nextTrack();
         }
 
         function togglePlay() {
@@ -79,8 +88,20 @@
             (state === YT.PlayerState.PLAYING) ? player.pauseVideo() : player.playVideo();
         }
 
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            document.getElementById('shuffleBtn').classList.toggle('text-red-500', isShuffle);
+            document.getElementById('shuffleBtn').classList.toggle('opacity-100', isShuffle);
+        }
+
+        function toggleRepeat() {
+            isRepeat = !isRepeat;
+            document.getElementById('repeatBtn').classList.toggle('text-red-500', isRepeat);
+            document.getElementById('repeatBtn').classList.toggle('opacity-100', isRepeat);
+        }
+
         function nextTrack() {
-            currentIndex = (currentIndex + 1) % tracks.length;
+            currentIndex = isShuffle ? Math.floor(Math.random() * tracks.length) : (currentIndex + 1) % tracks.length;
             player.loadVideoById(tracks[currentIndex].id);
         }
 
