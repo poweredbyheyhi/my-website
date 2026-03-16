@@ -6,47 +6,66 @@
     <title>PBHH Radio | Sound of Awareness</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .eye-gradient { background: radial-gradient(circle at center, #14b8a6, #000); }
+        .hero-bg {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.9)), 
+                        url('image_698b07.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body class="font-sans antialiased">
 
-    <header class="min-h-screen flex flex-col items-center justify-center text-center p-6 eye-gradient">
-        <h1 class="text-6xl font-black mb-6 tracking-tighter">PBHH RADIO</h1>
-        <p class="text-xl max-w-lg mb-10 text-white/80 italic">You are not the thoughts you think—you are the awareness that watches them.</p>
-        
-        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
-            <a href="https://pbhhradio.com" class="bg-teal-500 text-black px-8 py-4 rounded-full font-bold hover:bg-teal-400 transition">Download App</a>
-            <a href="https://www.youtube.com/@poweredbyheyhi" target="_blank" class="bg-white/10 px-8 py-4 rounded-full font-bold hover:bg-white/20 transition">YouTube</a>
-            <a href="open.spotify.com/artist/1m4sJX0dr9z4q1u3nYIVCq" target="_blank" class="bg-white/10 px-8 py-4 rounded-full font-bold hover:bg-white/20 transition">Spotify</a>
+    <header class="min-h-screen flex flex-col items-center justify-center text-center p-6 hero-bg">
+        <div class="max-w-3xl">
+            <h1 class="text-7xl font-black mb-6 tracking-tighter text-white drop-shadow-2xl">PBHH RADIO</h1>
+            <p class="text-2xl mb-10 text-white/90 italic font-light tracking-wide">
+                "You are not the thoughts you think—you are the awareness that watches them."
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-5 w-full justify-center items-center">
+                <a href="https://pbhhradio.com" class="bg-white text-black px-10 py-4 rounded-full font-black text-lg hover:bg-teal-400 transition transform hover:scale-105 shadow-xl">LAUNCH APP</a>
+                <a href="https://www.youtube.com/@poweredbyheyhi" target="_blank" class="glass px-10 py-4 rounded-full font-bold hover:bg-white/10 transition">YOUTUBE</a>
+                <a href="open.spotify.com/artist/1m4sJX0dr9z4q1u3nYIVCq" target="_blank" class="glass px-10 py-4 rounded-full font-bold hover:bg-white/10 transition">SPOTIFY</a>
+            </div>
         </div>
     </header>
 
-    <section class="py-20 px-6 max-w-5xl mx-auto">
-        <h2 class="text-3xl font-bold mb-12 text-center">Core Frameworks</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-zinc-900 p-6 rounded-2xl border border-white/5">
-                <h3 class="font-bold text-teal-400 mb-2">Self-as-Eye</h3>
-                <p class="text-sm text-white/60">Distinguishes the false self ('i') from the true self ('Eye')—the divine awareness that witnesses existence.</p>
-            </div>
-            <div class="bg-zinc-900 p-6 rounded-2xl border border-white/5">
-                <h3 class="font-bold text-amber-500 mb-2">Coin</h3>
-                <p class="text-sm text-white/60">Understanding polarity: The negative, the positive, and the edge of pure awareness that holds both.</p>
-            </div>
-            <div class="bg-zinc-900 p-6 rounded-2xl border border-white/5">
-                <h3 class="font-bold text-blue-500 mb-2">Mirror</h3>
-                <p class="text-sm text-white/60">All is reflection. Your external world mirrors your internal state; polish the mirror to shift the outside.</p>
+    <section class="py-24 px-6 bg-black">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl font-bold mb-16 text-center tracking-widest uppercase">The Frameworks</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="font-bold text-teal-400 text-xl mb-4 uppercase tracking-wider">Self-as-Eye</h3>
+                    <p class="text-white/60 leading-relaxed">The core of the experience. Distinguishing the false self ("i") from the true "Eye"—the divine awareness that witnesses existence.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="font-bold text-amber-500 text-xl mb-4 uppercase tracking-wider">The Coin</h3>
+                    <p class="text-white/60 leading-relaxed">Mastering polarity. Understanding the negative, the positive, and the stillness of the edge that holds both in balance.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl">
+                    <h3 class="font-bold text-blue-500 text-xl mb-4 uppercase tracking-wider">The Mirror</h3>
+                    <p class="text-white/60 leading-relaxed">All is reflection. Your external reality is a mirror of your internal state. Polish the mirror to shift your world.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-12 border-t border-white/10 text-center">
-        <div class="space-x-4 text-sm mb-4">
-            <a href="a.co/d/7Xz6DHl" target="_blank" class="text-teal-500 hover:underline">Read the Framework Book</a>
-            <a href="https://music.apple.com/us/artist/powered-by-hey-hi/1713325880" target="_blank" class="text-teal-500 hover:underline">Apple Music</a>
+    <section class="py-20 text-center bg-zinc-950 border-t border-white/5">
+        <h2 class="text-2xl font-light mb-8 opacity-80 uppercase tracking-[0.3em]">Deepen the Journey</h2>
+        <div class="flex flex-wrap justify-center gap-8">
+            <a href="https://a.co/d/7Xz6DHl" target="_blank" class="text-teal-500 hover:text-white transition">Read the Book</a>
+            <a href="https://music.apple.com/us/artist/powered-by-hey-hi/1713325880" target="_blank" class="text-teal-500 hover:text-white transition">Apple Music</a>
+            <a href="https://iheart.com/artist/poweredbyheyhi-45306517/" target="_blank" class="text-teal-500 hover:text-white transition">iHeartRadio</a>
         </div>
-        <p class="text-white/30 text-xs uppercase tracking-widest">© Powered by Hey Hi</p>
-    </footer>
+        <p class="mt-16 text-white/20 text-[10px] uppercase tracking-[0.5em]">© Powered by Hey Hi</p>
+    </section>
 
 </body>
 </html>
