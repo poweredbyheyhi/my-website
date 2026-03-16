@@ -2,48 +2,25 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PBHH | RADIO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #000; color: #fff; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .nav-active { color: #ef4444; border-bottom: 1px solid #ef4444; }
         .active-state { color: #ef4444; opacity: 1 !important; }
     </style>
 </head>
-<body class="pb-24">
-
-    <div class="max-w-2xl mx-auto px-6 pt-12 pb-6">
-        <h1 class="text-4xl font-light text-[#ff2a2a] tracking-[0.1em]">PBHH RADIO</h1>
-    </div>
-
-    <div class="sticky top-0 z-50 bg-black p-4">
-        <div class="aspect-video w-full max-w-2xl mx-auto">
-            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+<body class="p-6">
+    <div class="max-w-md mx-auto">
+        <div id="player-container" class="aspect-video w-full"></div>
         
-        <div class="max-w-xs mx-auto flex justify-between items-center mt-8 text-white">
-            <button id="shuffleBtn" onclick="toggleShuffle()" class="opacity-50 transition">🔀</button>
-            <button onclick="changeTrack(-1)" class="hover:text-red-500 transition text-2xl">⏮</button>
-            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
-            <button onclick="changeTrack(1)" class="hover:text-red-500 transition text-2xl">⏭</button>
-            <button id="repeatBtn" onclick="toggleRepeat()" class="opacity-50 transition">🔁</button>
+        <div class="flex justify-between items-center mt-8 px-4 text-2xl">
+            <button id="shuffleBtn" onclick="toggleShuffle()">🔀</button>
+            <button onclick="changeTrack(-1)">⏮</button>
+            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black font-bold">❚❚</button>
+            <button onclick="changeTrack(1)">⏭</button>
+            <button id="repeatBtn" onclick="toggleRepeat()">🔁</button>
         </div>
-    </div>
-
-    <div class="max-w-2xl mx-auto px-6 mt-8">
-        <div class="flex gap-8 mb-8 uppercase text-[10px] tracking-widest text-zinc-500">
-            <button onclick="switchTab(event, 'releases')" class="nav-active">Releases</button>
-            <button onclick="switchTab(event, 'about')">About</button>
-            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
-        </div>
-
-        <div id="releases" class="tab-content active">
-            <div id="library"></div>
-        </div>
-        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration.</div>
+        <p id="trackTitle" class="text-center mt-6 text-sm opacity-60"></p>
     </div>
 
     <script>
@@ -53,19 +30,36 @@
             { id: "j26Pp_EsFuE", title: "Polaris" }
         ];
         let currentIndex = 0;
-        let isPlaying = true;
         let isShuffle = false;
         let isRepeat = false;
-        const playerFrame = document.getElementById('main-player');
+        let player;
 
-        function sendCommand(func, args = []) {
-            playerFrame.contentWindow.postMessage(JSON.stringify({'event': 'command', 'func': func, 'args': args}), '*');
+        // Load YouTube API
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player-container', {
+                height: '100%',
+                width: '100%',
+                videoId: tracks[currentIndex].id,
+                events: {
+                    'onStateChange': (e) => {
+                        if (e.data === 0) { // Ended
+                            if (isRepeat) { player.playVideo(); } 
+                            else { changeTrack(1); }
+                        }
+                    }
+                }
+            });
+            document.getElementById('trackTitle').innerText = tracks[currentIndex].title;
         }
 
         function togglePlay() {
-            isPlaying = !isPlaying;
-            sendCommand(isPlaying ? 'playVideo' : 'pauseVideo');
-            document.getElementById('playBtn').innerText = isPlaying ? '❚❚' : '▶';
+            const state = player.getPlayerState();
+            if (state === 1) { player.pauseVideo(); document.getElementById('playBtn').innerText = '▶'; }
+            else { player.playVideo(); document.getElementById('playBtn').innerText = '❚❚'; }
         }
 
         function toggleShuffle() {
@@ -79,46 +73,12 @@
         }
 
         function changeTrack(dir) {
-            if (isShuffle) {
-                currentIndex = Math.floor(Math.random() * tracks.length);
-            } else {
-                currentIndex = (currentIndex + dir + tracks.length) % tracks.length;
-            }
-            sendCommand('loadVideoById', [tracks[currentIndex].id]);
+            currentIndex = isShuffle ? Math.floor(Math.random() * tracks.length) 
+                                     : (currentIndex + dir + tracks.length) % tracks.length;
+            player.loadVideoById(tracks[currentIndex].id);
+            document.getElementById('trackTitle').innerText = tracks[currentIndex].title;
             document.getElementById('playBtn').innerText = '❚❚';
-            isPlaying = true;
         }
-
-        function switchTab(evt, id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('button').forEach(el => el.classList.remove('nav-active'));
-            document.getElementById(id).classList.add('active');
-            evt.currentTarget.classList.add('nav-active');
-        }
-
-        const library = document.getElementById('library');
-        tracks.forEach((track, index) => {
-            const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700";
-            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
-            div.onclick = () => { currentIndex = index; sendCommand('loadVideoById', [track.id]); document.getElementById('playBtn').innerText = '❚❚'; };
-            library.appendChild(div);
-        });
-
-        // Listen for video end
-        window.addEventListener("message", (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.info && data.info.playerState === 0) {
-                    if (isRepeat) {
-                        sendCommand('seekTo', [0]);
-                        sendCommand('playVideo', []);
-                    } else {
-                        changeTrack(1);
-                    }
-                }
-            } catch(e) {}
-        });
     </script>
 </body>
 </html>
