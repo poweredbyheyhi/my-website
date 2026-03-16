@@ -10,6 +10,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .nav-active { color: #ef4444; border-bottom: 1px solid #ef4444; }
+        .active-btn { color: #ef4444; opacity: 1 !important; }
     </style>
 </head>
 <body class="pb-24">
@@ -24,25 +25,12 @@
         </div>
         
         <div class="max-w-xs mx-auto flex justify-between items-center mt-8 text-white">
-            <button onclick="sendCommand('setShuffle', [])" class="opacity-50 hover:opacity-100 transition">🔀</button>
+            <button id="shuffleBtn" onclick="toggleShuffle()" class="opacity-50 transition">🔀</button>
             <button onclick="changeTrack(-1)" class="hover:text-red-500 transition text-2xl">⏮</button>
             <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
             <button onclick="changeTrack(1)" class="hover:text-red-500 transition text-2xl">⏭</button>
-            <button onclick="sendCommand('setLoop', [true])" class="opacity-50 hover:opacity-100 transition">🔁</button>
+            <button id="repeatBtn" onclick="toggleRepeat()" class="opacity-50 transition">🔁</button>
         </div>
-    </div>
-
-    <div class="max-w-2xl mx-auto px-6 mt-8">
-        <div class="flex gap-8 mb-8 uppercase text-[10px] tracking-widest text-zinc-500">
-            <button onclick="switchTab(event, 'releases')" class="nav-active">Releases</button>
-            <button onclick="switchTab(event, 'about')">About</button>
-            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
-        </div>
-
-        <div id="releases" class="tab-content active">
-            <div id="library"></div>
-        </div>
-        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration.</div>
     </div>
 
     <script>
@@ -53,15 +41,12 @@
         ];
         let currentIndex = 0;
         let isPlaying = true;
+        let isShuffle = false;
+        let isRepeat = false;
         const playerFrame = document.getElementById('main-player');
 
-        // Professional Bridge Command
         function sendCommand(func, args = []) {
-            playerFrame.contentWindow.postMessage(JSON.stringify({
-                'event': 'command',
-                'func': func,
-                'args': args
-            }), '*');
+            playerFrame.contentWindow.postMessage(JSON.stringify({'event': 'command', 'func': func, 'args': args}), '*');
         }
 
         function togglePlay() {
@@ -70,27 +55,38 @@
             document.getElementById('playBtn').innerText = isPlaying ? '❚❚' : '▶';
         }
 
+        function toggleShuffle() {
+            isShuffle = !isShuffle;
+            document.getElementById('shuffleBtn').classList.toggle('active-btn', isShuffle);
+        }
+
+        function toggleRepeat() {
+            isRepeat = !isRepeat;
+            document.getElementById('repeatBtn').classList.toggle('active-btn', isRepeat);
+        }
+
         function changeTrack(dir) {
-            currentIndex = (currentIndex + dir + tracks.length) % tracks.length;
+            if (isShuffle) {
+                currentIndex = Math.floor(Math.random() * tracks.length);
+            } else {
+                currentIndex = (currentIndex + dir + tracks.length) % tracks.length;
+            }
             sendCommand('loadVideoById', [tracks[currentIndex].id]);
             document.getElementById('playBtn').innerText = '❚❚';
             isPlaying = true;
         }
 
-        function switchTab(evt, id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('button').forEach(el => el.classList.remove('nav-active'));
-            document.getElementById(id).classList.add('active');
-            evt.currentTarget.classList.add('nav-active');
-        }
-
-        const library = document.getElementById('library');
-        tracks.forEach((track, index) => {
-            const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700";
-            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
-            div.onclick = () => { currentIndex = index; sendCommand('loadVideoById', [track.id]); };
-            library.appendChild(div);
+        // Listen for video end to handle repeat/auto-next
+        window.addEventListener("message", (event) => {
+            const data = JSON.parse(event.data);
+            if (data.info && data.info.playerState === 0) {
+                if (isRepeat) {
+                    sendCommand('seekTo', [0]);
+                    sendCommand('playVideo', []);
+                } else {
+                    changeTrack(1);
+                }
+            }
         });
     </script>
 </body>
