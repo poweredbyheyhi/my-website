@@ -1,23 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Your Name | Artist & Author</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POWEREDBYHEYHI | RADIO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #121212; color: white; padding: 50px; }
-        .link-card { background: #1f1f1f; margin: 15px auto; padding: 20px; max-width: 400px; border-radius: 10px; border: 1px solid #333; text-decoration: none; color: white; display: block; transition: 0.3s; }
-        .link-card:hover { background: #333; transform: scale(1.02); }
-        .youtube { border-left: 5px solid #ff0000; }
-        .spotify { border-left: 5px solid #1DB954; }
-        .amazon { border-left: 5px solid #FF9900; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fade-in 1s ease-out forwards; }
     </style>
 </head>
-<body>
-    <h1>Your Name</h1>
-    <p>Music, Books, and More</p>
+<body class="min-h-screen bg-black text-white font-sans selection:bg-red-500 overflow-x-hidden">
+    
+    <div id="bg-blur" class="fixed inset-0 opacity-40 blur-[120px] transition-colors duration-1000" style="background-color: #f59e0b;"></div>
 
-    <a href="YOUR_YOUTUBE_LINK" class="link-card youtube">📺 Watch on YouTube</a>
-    <a href="YOUR_SPOTIFY_LINK" class="link-card spotify">🎧 Listen on Spotify</a>
-    <a href="YOUR_AMAZON_LINK" class="link-card amazon">📖 Buy my Books on Amazon</a>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 py-12">
+        <header class="flex flex-col items-center mb-16 animate-fade-in">
+            <div class="group cursor-pointer mb-4">
+                <img src="https://i.imgur.com/kR1x1wS.png" alt="PBHH" class="w-24 h-24 rounded-full border-2 border-transparent group-hover:border-amber-500 transition-all duration-500 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+            </div>
+            <h1 class="text-sm font-bold tracking-[0.3em] text-white/80">POWEREDBYHEYHI</h1>
+            <p class="text-5xl font-light text-[#ff2a2a] tracking-[0.1em] mt-2">RADIO</p>
+        </header>
+
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h2 class="text-3xl font-bold leading-tight">The Library of <br><span class="text-red-500">Divine Awareness</span></h2>
+                <p class="text-zinc-400 leading-relaxed">Music is not entertainment; it is an alignment. PBHH Radio is a sonic exploration of the Nine Frameworks taught in <i>The Mind of Christ</i>.</p>
+                <div class="flex gap-4">
+                    <a href="https://a.co/d/7Xz6DHl" target="_blank" class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-red-500 hover:text-white transition-colors">Read The Book</a>
+                    <button class="border border-white/20 px-6 py-3 rounded-full font-bold hover:bg-white/10 transition-colors">Launch App</button>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900/50 border border-white/10 p-8 rounded-[40px] backdrop-blur-md">
+                <h3 class="text-xs font-bold tracking-widest text-zinc-500 uppercase mb-6 text-center">Explore Frameworks</h3>
+                <div id="grid" class="grid grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+
+        <footer class="mt-24 border-t border-white/10 pt-12 text-center">
+            <div class="text-4xl mb-6">👁️</div>
+            <p class="text-xs text-zinc-500 tracking-widest uppercase">Everything you knead is already grown.</p>
+        </footer>
+    </div>
+
+    <script>
+        const frameworks = [
+            { name: "Coin", color: "#f59e0b", icon: "🪙", desc: "Polarity & Awareness" },
+            { name: "Mirror", color: "#3b82f6", icon: "🪞", desc: "All is Reflection" },
+            { name: "Trinity", color: "#8b5cf6", icon: "🔺", desc: "One as Three" },
+            { name: "WATT", color: "#ef4444", icon: "⚡", desc: "Power through Awareness" }
+        ];
+
+        const grid = document.getElementById('grid');
+        const bg = document.getElementById('bg-blur');
+
+        frameworks.forEach(fw => {
+            const btn = document.createElement('button');
+            btn.className = "p-4 rounded-3xl border border-white/5 bg-black/20 transition-all text-left hover:border-amber-500 hover:bg-amber-500/10";
+            btn.innerHTML = `<span class="text-2xl mb-2 block">${fw.icon}</span><div class="font-bold text-sm">${fw.name}</div><div class="text-[10px] text-zinc-500">${fw.desc}</div>`;
+            btn.onmouseenter = () => bg.style.backgroundColor = fw.color;
+            grid.appendChild(btn);
+        });
+    </script>
 </body>
 </html>
