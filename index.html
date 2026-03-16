@@ -7,14 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #000; color: #fff; }
-        .tab-btn { color: #525252; transition: all 0.3s; }
-        .tab-btn.active { color: #ef4444; border-bottom: 2px solid #ef4444; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        .control-btn { transition: transform 0.2s; }
+        .control-btn:active { transform: scale(0.9); }
     </style>
 </head>
 <body class="font-sans antialiased pb-24">
-    
+
     <div class="max-w-2xl mx-auto px-6 pt-12 pb-6">
         <h1 class="text-4xl font-light text-[#ff2a2a] tracking-[0.1em]">PBHH RADIO</h1>
     </div>
@@ -23,54 +23,64 @@
         <div class="aspect-video w-full max-w-2xl mx-auto">
             <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8" allowfullscreen></iframe>
         </div>
+        
+        <div class="max-w-2xl mx-auto flex justify-center items-center gap-8 mt-6">
+            <button class="text-zinc-500">🔀</button>
+            <button onclick="prevTrack()" class="text-white text-2xl">⏮</button>
+            <button id="main-play-pause" onclick="togglePlay()" class="bg-orange-500 w-16 h-16 rounded-full text-white text-2xl font-bold">⏸</button>
+            <button onclick="nextTrack()" class="text-white text-2xl">⏭</button>
+            <button class="text-zinc-500">🔁</button>
+        </div>
     </div>
 
     <div class="max-w-2xl mx-auto px-6 mt-8">
         <div class="flex gap-8 mb-8 font-bold uppercase text-xs tracking-widest text-zinc-500">
-            <button onclick="switchTab(this, 'releases')" class="tab-btn active">Releases</button>
+            <button onclick="switchTab(this, 'releases')" class="tab-btn active border-b-2 border-red-500 text-red-500">Releases</button>
             <button onclick="switchTab(this, 'about')" class="tab-btn">About</button>
-            <a href="https://pbhhradio.com" class="text-red-500 hover:text-white">Launch App</a>
+            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
         </div>
 
-        <div id="releases" class="tab-content active space-y-0">
-            <div id="library"></div>
-        </div>
-
-        <div id="about" class="tab-content text-zinc-400">
-            <p>PBHH Radio is a sonic exploration of the Nine Frameworks. Everything you knead is already grown.</p>
-        </div>
+        <div id="releases" class="tab-content active" id="library"></div>
+        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration of the Nine Frameworks.</div>
     </div>
 
     <script>
+        let currentIndex = 0;
         const tracks = [
             { "id": "pzr2eZtcWK8", "title": "Boo boo boo bop" },
             { "id": "_r9U0mrvLHQ", "title": "Preach Pastor" },
-            { "id": "j26Pp_EsFuE", "title": "Polaris" },
-            { "id": "CyGIjgb7DJY", "title": "Kendra’s Lala-Bye! 9" },
-            { "id": "Gkhu1P9lYG4", "title": "Chinatown" },
-            { "id": "AzptWfKgpwc", "title": "Monica’s Kids (Olive Branch)" },
-            { "id": "Q90ftOQeVOM", "title": "Weakened Cruise" },
-            { "id": "HTjxgmwCOqQ", "title": "Catoosh!" }
+            { "id": "j26Pp_EsFuE", "title": "Polaris" }
         ];
+
+        function loadTrack(index) {
+            currentIndex = index;
+            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[index].id + "?autoplay=1";
+        }
+
+        function nextTrack() {
+            currentIndex = (currentIndex + 1) % tracks.length;
+            loadTrack(currentIndex);
+        }
+
+        function prevTrack() {
+            currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+            loadTrack(currentIndex);
+        }
 
         function switchTab(el, id) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active', 'border-b-2', 'border-red-500', 'text-red-500'); });
             document.getElementById(id).classList.add('active');
-            el.classList.add('active');
+            el.classList.add('active', 'border-b-2', 'border-red-500', 'text-red-500');
         }
 
-        const library = document.getElementById('library');
-        tracks.forEach(track => {
+        // Render List
+        const library = document.getElementById('releases');
+        tracks.forEach((track, index) => {
             const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6";
-            div.innerHTML = `
-                <span class="text-sm font-medium">${track.title}</span>
-                <div class="flex gap-6">
-                    <button onclick="document.getElementById('main-player').src='https://www.youtube.com/embed/${track.id}'" class="text-xs font-bold text-white hover:text-red-500">PLAY</button>
-                    <a href="https://youtube.com/watch?v=${track.id}" target="_blank" class="text-xs text-zinc-600 hover:text-white">LINK</a>
-                </div>
-            `;
+            div.className = "flex justify-between items-center py-6 cursor-pointer hover:opacity-70";
+            div.onclick = () => loadTrack(index);
+            div.innerHTML = `<span class="text-sm font-medium">${track.title}</span><span class="text-xs text-zinc-600">PLAY</span>`;
             library.appendChild(div);
         });
     </script>
