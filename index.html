@@ -20,15 +20,15 @@
 
     <div class="sticky top-0 z-50 bg-black p-4">
         <div class="aspect-video w-full max-w-2xl mx-auto">
-            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8" frameborder="0" allowfullscreen></iframe>
+            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         
         <div class="max-w-xs mx-auto flex justify-between items-center mt-8 text-white">
-            <button class="opacity-50">🔀</button>
+            <button onclick="sendCommand('setShuffle', [])" class="opacity-50 hover:opacity-100 transition">🔀</button>
             <button onclick="changeTrack(-1)" class="hover:text-red-500 transition text-2xl">⏮</button>
-            <button class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
+            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
             <button onclick="changeTrack(1)" class="hover:text-red-500 transition text-2xl">⏭</button>
-            <button class="opacity-50">🔁</button>
+            <button onclick="sendCommand('setLoop', [true])" class="opacity-50 hover:opacity-100 transition">🔁</button>
         </div>
     </div>
 
@@ -52,10 +52,29 @@
             { id: "j26Pp_EsFuE", title: "Polaris" }
         ];
         let currentIndex = 0;
+        let isPlaying = true;
+        const playerFrame = document.getElementById('main-player');
+
+        // Professional Bridge Command
+        function sendCommand(func, args = []) {
+            playerFrame.contentWindow.postMessage(JSON.stringify({
+                'event': 'command',
+                'func': func,
+                'args': args
+            }), '*');
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            sendCommand(isPlaying ? 'playVideo' : 'pauseVideo');
+            document.getElementById('playBtn').innerText = isPlaying ? '❚❚' : '▶';
+        }
 
         function changeTrack(dir) {
             currentIndex = (currentIndex + dir + tracks.length) % tracks.length;
-            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[currentIndex].id + "?autoplay=1";
+            sendCommand('loadVideoById', [tracks[currentIndex].id]);
+            document.getElementById('playBtn').innerText = '❚❚';
+            isPlaying = true;
         }
 
         function switchTab(evt, id) {
@@ -70,7 +89,7 @@
             const div = document.createElement('div');
             div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700";
             div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
-            div.onclick = () => { currentIndex = index; document.getElementById('main-player').src = "https://www.youtube.com/embed/" + track.id + "?autoplay=1"; };
+            div.onclick = () => { currentIndex = index; sendCommand('loadVideoById', [track.id]); };
             library.appendChild(div);
         });
     </script>
