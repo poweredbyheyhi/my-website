@@ -1,23 +1,70 @@
-<div class="max-w-md mx-auto flex justify-center items-center gap-6 my-8">
-    <button class="opacity-50 hover:opacity-100 transition">🔀</button>
-    <button onclick="prevTrack()" class="hover:text-red-500 transition">⏮</button>
-    
-    <button id="main-play-pause" onclick="togglePlay()" 
-            class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 transition-all">
-        <span id="play-icon">▶</span>
-    </button>
-    
-    <button onclick="nextTrack()" class="hover:text-red-500 transition">⏭</button>
-    <button class="opacity-50 hover:opacity-100 transition">🔁</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PBHH | RADIO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #000; color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="pb-24">
 
-<script>
-    let isPlaying = false;
-    function togglePlay() {
-        const player = document.getElementById('main-player');
-        const icon = document.getElementById('play-icon');
-        // This is a visual toggle; YouTube iframe API is required for true control
-        isPlaying = !isPlaying;
-        icon.innerText = isPlaying ? "⏸" : "▶";
-    }
-</script>
+    <div class="max-w-2xl mx-auto px-6 pt-12 pb-6">
+        <h1 class="text-4xl font-light text-[#ff2a2a] tracking-[0.1em]">PBHH RADIO</h1>
+    </div>
+
+    <div class="sticky top-0 z-50 bg-black p-4">
+        <div class="aspect-video w-full max-w-2xl mx-auto">
+            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        
+        <div class="max-w-md mx-auto flex justify-center items-center gap-6 mt-6">
+            <button class="opacity-50">🔀</button>
+            <button onclick="changeTrack(-1)">⏮</button>
+            <button onclick="togglePlay()" class="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center">▶</button>
+            <button onclick="changeTrack(1)">⏭</button>
+            <button class="opacity-50">🔁</button>
+        </div>
+    </div>
+
+    <div class="max-w-2xl mx-auto px-6 mt-8">
+        <div id="library"></div>
+    </div>
+
+    <script>
+        const tracks = [
+            { id: "pzr2eZtcWK8", title: "Boo boo boo bop" },
+            { id: "_r9U0mrvLHQ", title: "Preach Pastor" },
+            { id: "j26Pp_EsFuE", title: "Polaris" }
+        ];
+        
+        let currentIndex = 0;
+
+        function loadTrack(index) {
+            currentIndex = index;
+            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[index].id + "?autoplay=1";
+        }
+
+        function changeTrack(direction) {
+            currentIndex = (currentIndex + direction + tracks.length) % tracks.length;
+            loadTrack(currentIndex);
+        }
+
+        function togglePlay() { alert("Note: Due to browser security, auto-pausing external YouTube iframes requires a specific API setup. Clicking the video itself is the standard control."); }
+
+        // Render List
+        const library = document.getElementById('library');
+        tracks.forEach((track, index) => {
+            const div = document.createElement('div');
+            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700";
+            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
+            div.onclick = () => loadTrack(index);
+            library.appendChild(div);
+        });
+    </script>
+</body>
+</html>
