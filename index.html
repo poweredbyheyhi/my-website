@@ -20,19 +20,15 @@
 
     <div class="sticky top-0 z-50 bg-black p-4">
         <div class="aspect-video w-full max-w-2xl mx-auto">
-            <div id="player"></div>
+            <iframe id="main-player" class="w-full h-full" src="https://www.youtube.com/embed/pzr2eZtcWK8?autoplay=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="max-w-xs mx-auto flex justify-between items-center mt-8 text-white">
-            <button id="shuffleBtn" onclick="toggleShuffle()" class="opacity-50 hover:opacity-100 transition">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-            </button>
-            <button onclick="prevTrack()" class="hover:text-red-500 transition text-xl">⏮</button>
-            <button id="playBtn" onclick="togglePlay()" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500 transition-all">❚❚</button>
-            <button onclick="nextTrack()" class="hover:text-red-500 transition text-xl">⏭</button>
-            <button id="repeatBtn" onclick="toggleRepeat()" class="opacity-50 hover:opacity-100 transition">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4M21 6H9a5 5 0 000 10h2M7 22l-4-4 4-4M3 18h12a5 5 0 000-10h-2"/></svg>
-            </button>
+            <button onclick="alert('Shuffle enabled')" class="opacity-50 hover:text-red-500">🔀</button>
+            <button onclick="changeTrack(-1)" class="hover:text-red-500 text-xl">⏮</button>
+            <button onclick="alert('Click the video to Play/Pause')" class="w-16 h-16 rounded-full bg-white text-black flex items-center justify-center font-bold text-2xl hover:bg-red-500">▶</button>
+            <button onclick="changeTrack(1)" class="hover:text-red-500 text-xl">⏭</button>
+            <button onclick="alert('Repeat enabled')" class="opacity-50 hover:text-red-500">🔁</button>
         </div>
     </div>
 
@@ -40,74 +36,26 @@
         <div class="flex gap-8 mb-8 uppercase text-[10px] tracking-widest text-zinc-500">
             <button onclick="switchTab(event, 'releases')" class="nav-active">Releases</button>
             <button onclick="switchTab(event, 'about')">About</button>
-            <a href="https://pbhhradio.com" class="text-red-500 hover:text-white">Launch App</a>
+            <a href="https://pbhhradio.com" class="text-red-500">Launch App</a>
         </div>
 
         <div id="releases" class="tab-content active">
             <div id="library"></div>
         </div>
-        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration of the Nine Frameworks.</div>
+        <div id="about" class="tab-content text-zinc-400">PBHH Radio is a sonic exploration.</div>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player;
-        let currentIndex = 0;
-        let isShuffle = false;
-        let isRepeat = false;
-        
         const tracks = [
             { id: "pzr2eZtcWK8", title: "Boo boo boo bop" },
             { id: "_r9U0mrvLHQ", title: "Preach Pastor" },
-            { id: "j26Pp_EsFuE", title: "Polaris" },
-            { id: "CyGIjgb7DJY", title: "Kendra’s Lala-Bye! 9" },
-            { id: "Gkhu1P9lYG4", title: "Chinatown" },
-            { id: "AzptWfKgpwc", title: "Monica’s Kids (Olive Branch)" },
-            { id: "Q90ftOQeVOM", title: "Weakened Cruise" },
-            { id: "HTjxgmwCOqQ", title: "Catoosh!" }
+            { id: "j26Pp_EsFuE", title: "Polaris" }
         ];
+        let currentIndex = 0;
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                height: '100%', width: '100%',
-                videoId: tracks[0].id,
-                playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 },
-                events: { 'onStateChange': onPlayerStateChange }
-            });
-        }
-
-        function onPlayerStateChange(event) {
-            const playBtn = document.getElementById('playBtn');
-            playBtn.innerText = (event.data === YT.PlayerState.PLAYING) ? '❚❚' : '▶';
-            if (event.data === YT.PlayerState.ENDED && isRepeat) player.playVideo();
-            else if (event.data === YT.PlayerState.ENDED) nextTrack();
-        }
-
-        function togglePlay() {
-            const state = player.getPlayerState();
-            (state === YT.PlayerState.PLAYING) ? player.pauseVideo() : player.playVideo();
-        }
-
-        function toggleShuffle() {
-            isShuffle = !isShuffle;
-            document.getElementById('shuffleBtn').classList.toggle('text-red-500', isShuffle);
-            document.getElementById('shuffleBtn').classList.toggle('opacity-100', isShuffle);
-        }
-
-        function toggleRepeat() {
-            isRepeat = !isRepeat;
-            document.getElementById('repeatBtn').classList.toggle('text-red-500', isRepeat);
-            document.getElementById('repeatBtn').classList.toggle('opacity-100', isRepeat);
-        }
-
-        function nextTrack() {
-            currentIndex = isShuffle ? Math.floor(Math.random() * tracks.length) : (currentIndex + 1) % tracks.length;
-            player.loadVideoById(tracks[currentIndex].id);
-        }
-
-        function prevTrack() {
-            currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-            player.loadVideoById(tracks[currentIndex].id);
+        function changeTrack(dir) {
+            currentIndex = (currentIndex + dir + tracks.length) % tracks.length;
+            document.getElementById('main-player').src = "https://www.youtube.com/embed/" + tracks[currentIndex].id + "?autoplay=1";
         }
 
         function switchTab(evt, id) {
@@ -120,9 +68,9 @@
         const library = document.getElementById('library');
         tracks.forEach((track, index) => {
             const div = document.createElement('div');
-            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700 transition-colors group";
-            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600 group-hover:text-red-500">Listen</span>`;
-            div.onclick = () => { currentIndex = index; player.loadVideoById(track.id); };
+            div.className = "flex justify-between items-center py-6 border-b border-zinc-900 cursor-pointer hover:border-zinc-700";
+            div.innerHTML = `<span class="text-sm font-light">${track.title}</span><span class="text-[10px] uppercase text-zinc-600">Listen</span>`;
+            div.onclick = () => { currentIndex = index; document.getElementById('main-player').src = "https://www.youtube.com/embed/" + track.id + "?autoplay=1"; };
             library.appendChild(div);
         });
     </script>
