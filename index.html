@@ -1,68 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POWEREDBYHEYHI | RADIO</title>
+    <title>PBHH | RADIO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fade-in 1s ease-out forwards; }
+        body { background-color: #000; color: #fff; }
+        .player-card { background: #0a0a0a; border: 1px solid #1f1f1f; }
+        .glass-btn { background: #121212; border: 1px solid #222; }
+        .glass-btn:hover { border: 1px solid #ff2a2a; }
     </style>
 </head>
-<body class="min-h-screen bg-black text-white font-sans selection:bg-red-500 overflow-x-hidden">
-    
-    <div id="bg-blur" class="fixed inset-0 opacity-40 blur-[120px] transition-colors duration-1000" style="background-color: #f59e0b;"></div>
+<body class="font-sans antialiased">
 
-    <div class="relative z-10 max-w-4xl mx-auto px-6 py-12">
-        <header class="flex flex-col items-center mb-16 animate-fade-in">
-            <div class="group cursor-pointer mb-4">
-                <img src="https://i.imgur.com/kR1x1wS.png" alt="PBHH" class="w-24 h-24 rounded-full border-2 border-transparent group-hover:border-amber-500 transition-all duration-500 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-            </div>
-            <h1 class="text-sm font-bold tracking-[0.3em] text-white/80">POWEREDBYHEYHI</h1>
-            <p class="text-5xl font-light text-[#ff2a2a] tracking-[0.1em] mt-2">RADIO</p>
-        </header>
+    <div class="max-w-2xl mx-auto px-6 py-12">
+        <div class="flex gap-8 mb-12 border-b border-white/5 pb-6">
+            <button class="text-white font-bold border-b-2 border-red-500 pb-1">LIBRARY</button>
+            <button class="text-zinc-500 hover:text-white transition-colors">RADIO</button>
+            <button class="text-zinc-500 hover:text-white transition-colors">FRAMEWORKS</button>
+        </div>
 
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div class="space-y-6">
-                <h2 class="text-3xl font-bold leading-tight">The Library of <br><span class="text-red-500">Divine Awareness</span></h2>
-                <p class="text-zinc-400 leading-relaxed">Music is not entertainment; it is an alignment. PBHH Radio is a sonic exploration of the Nine Frameworks taught in <i>The Mind of Christ</i>.</p>
-                <div class="flex gap-4">
-                    <a href="https://a.co/d/7Xz6DHl" target="_blank" class="bg-white text-black px-6 py-3 rounded-full font-bold hover:bg-red-500 hover:text-white transition-colors">Read The Book</a>
-                    <button class="border border-white/20 px-6 py-3 rounded-full font-bold hover:bg-white/10 transition-colors">Launch App</button>
+        <div class="player-card p-8 rounded-3xl mb-8 flex items-center gap-6">
+            <div class="w-20 h-20 bg-red-900 rounded-xl animate-pulse"></div>
+            <div>
+                <p class="text-[10px] uppercase tracking-widest text-red-500 font-bold">Now Playing</p>
+                <h2 class="text-2xl font-medium">Divine Awareness</h2>
+                <div class="w-64 h-1 bg-white/10 mt-4 rounded-full overflow-hidden">
+                    <div class="w-1/3 h-full bg-red-500"></div>
                 </div>
-            </div>
-
-            <div class="bg-zinc-900/50 border border-white/10 p-8 rounded-[40px] backdrop-blur-md">
-                <h3 class="text-xs font-bold tracking-widest text-zinc-500 uppercase mb-6 text-center">Explore Frameworks</h3>
-                <div id="grid" class="grid grid-cols-2 gap-4"></div>
             </div>
         </div>
 
-        <footer class="mt-24 border-t border-white/10 pt-12 text-center">
-            <div class="text-4xl mb-6">👁️</div>
-            <p class="text-xs text-zinc-500 tracking-widest uppercase">Everything you knead is already grown.</p>
-        </footer>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
+                <div class="text-xl mb-2">🪙</div>
+                <div class="font-bold text-sm">Coin</div>
+            </div>
+            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
+                <div class="text-xl mb-2">🪞</div>
+                <div class="font-bold text-sm">Mirror</div>
+            </div>
+            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
+                <div class="text-xl mb-2">🔺</div>
+                <div class="font-bold text-sm">Trinity</div>
+            </div>
+            <div class="glass-btn p-6 rounded-2xl cursor-pointer">
+                <div class="text-xl mb-2">⚡</div>
+                <div class="font-bold text-sm">WATT</div>
+            </div>
+        </div>
+
+        <a href="https://a.co/d/7Xz6DHl" target="_blank" class="mt-8 block text-center py-4 rounded-xl border border-white/10 hover:border-red-500 transition-all font-bold text-sm">
+            READ THE DIVINE BOOK
+        </a>
     </div>
 
-    <script>
-        const frameworks = [
-            { name: "Coin", color: "#f59e0b", icon: "🪙", desc: "Polarity & Awareness" },
-            { name: "Mirror", color: "#3b82f6", icon: "🪞", desc: "All is Reflection" },
-            { name: "Trinity", color: "#8b5cf6", icon: "🔺", desc: "One as Three" },
-            { name: "WATT", color: "#ef4444", icon: "⚡", desc: "Power through Awareness" }
-        ];
-
-        const grid = document.getElementById('grid');
-        const bg = document.getElementById('bg-blur');
-
-        frameworks.forEach(fw => {
-            const btn = document.createElement('button');
-            btn.className = "p-4 rounded-3xl border border-white/5 bg-black/20 transition-all text-left hover:border-amber-500 hover:bg-amber-500/10";
-            btn.innerHTML = `<span class="text-2xl mb-2 block">${fw.icon}</span><div class="font-bold text-sm">${fw.name}</div><div class="text-[10px] text-zinc-500">${fw.desc}</div>`;
-            btn.onmouseenter = () => bg.style.backgroundColor = fw.color;
-            grid.appendChild(btn);
-        });
-    </script>
 </body>
 </html>
